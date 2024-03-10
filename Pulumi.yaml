@@ -1,0 +1,10 @@
+name: newhomework
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: new assignment
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: gcp-python

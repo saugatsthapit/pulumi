@@ -1,0 +1,2 @@
+pulumi-gcp
+psycopg2-binary>=2.8
