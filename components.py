@@ -47,6 +47,7 @@ class ServerlessApp(ComponentResource):
             region="us-central1",  # Specify the desired region for your Cloud Function
             source_archive_bucket=source_code_bucket.name,
             source_archive_object=source_code_object.name,
+            service_account_email="pulumi@hybrid-text-412119.iam.gserviceaccount.com",
             event_trigger={
                 "event_type": "google.storage.object.finalize",
                 "resource": self.bucket.id.apply(lambda id: f"projects/_/buckets/{id}"),
