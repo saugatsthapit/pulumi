@@ -1,2 +1,6 @@
 pulumi-gcp
 psycopg2-binary>=2.8
+cloud-sql-python-connector 
+psycopg2-binary
+sqlalchemy
+pg8000
