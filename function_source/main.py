@@ -7,10 +7,10 @@ def process_upload(event, context):
 
     # Connect to the database
     db_connection = psycopg2.connect(
-        dbname=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('DB_HOST')
+        dbname='my-serverless-app-db',
+        user='postgres',
+        password='Welcome#1234',
+        host='35.238.105.47'
     )
 
     cursor = db_connection.cursor()

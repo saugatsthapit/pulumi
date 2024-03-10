@@ -17,7 +17,10 @@ class ServerlessApp(ComponentResource):
                 for root, dirs, files in os.walk(source_dir):
                     for file in files:
                         file_path = os.path.join(root, file)
-                        zipf.write(file_path, os.path.relpath(file_path, os.path.join(source_dir, '..')))
+                        # Adjust arcname to not include 'function_source/' prefix
+                        arcname = os.path.relpath(file_path, source_dir)
+                        zipf.write(file_path, arcname)
+
 
         # Specify the source directory and the output zip filename
         source_dir = './function_source'
@@ -43,7 +46,7 @@ class ServerlessApp(ComponentResource):
         # Create a Google Cloud Function to process uploads
         self.function = gcp.cloudfunctions.Function(f"{name}-function",
             entry_point="process_upload",
-            runtime="python37",
+            runtime="python39",
             region="us-central1",  # Specify the desired region for your Cloud Function
             source_archive_bucket=source_code_bucket.name,
             source_archive_object=source_code_object.name,
