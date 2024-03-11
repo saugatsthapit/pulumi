@@ -82,8 +82,6 @@ class ServerlessApp(ComponentResource):
             'function_name': self.function.name,
         })
 
-
-
 class CloudSqlInstance(ComponentResource):
     def __init__(self, name: str, opts=None):
         super().__init__('pkg:index:CloudSqlInstance', name, {}, opts)
@@ -96,6 +94,10 @@ class CloudSqlInstance(ComponentResource):
                 tier="db-f1-micro",
                 ip_configuration=gcp.sql.DatabaseInstanceSettingsIpConfigurationArgs(
                     ipv4_enabled=True,
+                    authorized_networks=[gcp.sql.DatabaseInstanceSettingsIpConfigurationAuthorizedNetworkArgs(
+                        value="0.0.0.0/0",  # Allows access from any IP
+                        name="Allow all"
+                    )]
                 ),
             ),
         )
