@@ -10,6 +10,23 @@ import os
 class ServerlessApp(ComponentResource):
     def __init__(self, name: str, opts=None):
         super().__init__('pkg:index:ServerlessApp', name, {}, opts)
+        
+        # Initialize a Pulumi config
+        config = pulumi.Config()
+
+        # Access the secrets and config values
+        db_pass = config.require_secret("DB_PASS")
+        db_user = config.require("DB_USER")
+        cloud_sql_connection_name = config.require("CLOUD_SQL_CONNECTION_NAME")
+        db_name = config.require("DB_NAME")
+        
+        # Environment variables for the Cloud Function, combining secrets and plain text values
+        environment_variables = {
+            "DB_PASS": db_pass,
+            "DB_USER": db_user,
+            "CLOUD_SQL_CONNECTION_NAME": cloud_sql_connection_name,
+            "DB_NAME": db_name
+        }
 
         # Function to zip the source directory
         def zip_directory(source_dir, output_filename):
@@ -48,6 +65,7 @@ class ServerlessApp(ComponentResource):
         self.function = gcp.cloudfunctions.Function(f"{name}-function",
             entry_point="process_upload",
             runtime="python39",
+            environment_variables=environment_variables,
             region="us-central1",
             source_archive_bucket=source_code_bucket.name,
             source_archive_object=source_code_object.name,
