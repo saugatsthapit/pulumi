@@ -24,7 +24,7 @@ class ServerlessApp(ComponentResource):
 
         # Specify the source directory and the output zip filename
         source_dir = './function_source'
-        zip_filename = 'function_source.zip'  # Adjust path if running pulumi up outside the directory
+        zip_filename = 'function_source.zip'
 
         # Zip the source directory
         zip_directory(source_dir, zip_filename)
@@ -48,7 +48,7 @@ class ServerlessApp(ComponentResource):
         self.function = gcp.cloudfunctions.Function(f"{name}-function",
             entry_point="process_upload",
             runtime="python39",
-            region="us-central1",  # Specify the desired region for your Cloud Function
+            region="us-central1",
             source_archive_bucket=source_code_bucket.name,
             source_archive_object=source_code_object.name,
             opts=pulumi.ResourceOptions(depends_on=[source_code_object]),
@@ -92,7 +92,6 @@ class CloudSqlInstance(ComponentResource):
             'instance_name': self.instance.name,
             'database_name': self.database.name,
             'instance_connection_name': self.instance.connection_name,
-            # You might need to manually extract the public IP address after instance creation
         })
 
 
@@ -101,10 +100,8 @@ class DatabaseSchemaInfo(ComponentResource):
         super().__init__('my:module:DatabaseSchemaInfo', name, {}, opts)
 
         # Assuming cloud_sql_instance is an instance of CloudSqlInstance
-        # This just passes along the information; actual schema management is done externally
         self.instance_name = cloud_sql_instance.instance.name
         self.database_name = cloud_sql_instance.database.name
-        # Example for public IP - ensure you're capturing this correctly depending on your setup
         self.instance_connection_name = cloud_sql_instance.instance.connection_name
 
         self.register_outputs({

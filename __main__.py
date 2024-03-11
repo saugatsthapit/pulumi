@@ -35,14 +35,12 @@ roles = [
     "roles/secretmanager.admin"
 ]
 
-project_id = "hybrid-text-412119"
-
 # Assign roles to the service account
 for role in roles:
     iam_member = gcp.projects.IAMMember(f"pulumi-service-account-{role.split('/')[-1]}",
         role=role,
         member=pulumi.Output.concat("serviceAccount:", service_account.email),
-        project=project_id,  # Specify the project ID here
+        project="hybrid-text-412119",  # Specify the project ID here
         opts=pulumi.ResourceOptions(parent=service_account))
 
 # Instantiate your infrastructure components below
