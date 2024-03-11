@@ -40,7 +40,8 @@ class ServerlessApp(ComponentResource):
         # Upload the zipped source code to the bucket
         source_code_object = gcp.storage.BucketObject(f"{name}-function-source",
             bucket=source_code_bucket.name,
-            source=FileAsset(zip_filename)  # Use FileAsset to upload the zip file
+            source=FileAsset(zip_filename),  # Use FileAsset to upload the zip file
+            opts=pulumi.ResourceOptions(depends_on=[source_code_bucket]) # Ensure the bucket is created first
         )
 
         # Create a Google Cloud Function to process uploads
@@ -50,6 +51,7 @@ class ServerlessApp(ComponentResource):
             region="us-central1",  # Specify the desired region for your Cloud Function
             source_archive_bucket=source_code_bucket.name,
             source_archive_object=source_code_object.name,
+            opts=pulumi.ResourceOptions(depends_on=[source_code_object]),
             service_account_email="pulumi@hybrid-text-412119.iam.gserviceaccount.com",
             event_trigger={
                 "event_type": "google.storage.object.finalize",
